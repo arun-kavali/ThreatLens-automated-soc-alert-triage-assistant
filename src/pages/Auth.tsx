@@ -9,30 +9,12 @@ import { useToast } from "@/hooks/use-toast";
 
 type SignInMode = "analyst" | "alert_source";
 
-// Strong password validation for SOC security application
+// Basic password validation
 const validatePassword = (password: string): { valid: boolean; message: string } => {
-  const minLength = 12;
-  const hasUpperCase = /[A-Z]/.test(password);
-  const hasLowerCase = /[a-z]/.test(password);
-  const hasNumber = /\d/.test(password);
-  const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+  const minLength = 6;
 
   if (password.length < minLength) {
     return { valid: false, message: `Password must be at least ${minLength} characters` };
-  }
-
-  const requirementsMet = [hasUpperCase, hasLowerCase, hasNumber, hasSpecial].filter(Boolean).length;
-  if (requirementsMet < 3) {
-    return { valid: false, message: "Password needs 3 of: uppercase, lowercase, number, special character" };
-  }
-
-  // Check against common passwords
-  const commonPasswords = ['password', 'admin', 'welcome', 'test', '123456', 'qwerty', 'letmein'];
-  const lowerPassword = password.toLowerCase();
-  for (const common of commonPasswords) {
-    if (lowerPassword.includes(common)) {
-      return { valid: false, message: "Password contains common words or patterns" };
-    }
   }
 
   return { valid: true, message: "" };
@@ -362,7 +344,7 @@ export default function Auth() {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Strong password (12+ chars)"
+                  placeholder="Password (6+ chars)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`bg-white border-gray-200 text-gray-900 placeholder:text-gray-400 pl-10 pr-10 h-12 ${errors.password ? "border-red-500" : ""}`}
@@ -383,7 +365,7 @@ export default function Auth() {
               )}
               {!isLogin && (
                 <p className="text-xs text-gray-500">
-                  Min 12 chars with 3 of: uppercase, lowercase, number, special
+                  Min 6 characters
                 </p>
               )}
             </div>
